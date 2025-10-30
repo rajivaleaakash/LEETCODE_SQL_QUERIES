@@ -95,3 +95,76 @@ price
 FROM Product p
 JOIN Sales s
 ON p.product_id = s.product_id;
+
+/*
+QUESTION LINK
+https://leetcode.com/problems/customer-who-visited-but-did-not-make-any-transactions/?envType=study-plan-v2&envId=top-sql-50
+
+QUESTION 1581
+Write a solution to find the IDs of the users who visited without making any transactions and the number of times they made these types of visits.
+*/
+SELECT 
+customer_id,
+COUNT(visit_id) AS count_no_trans
+FROM Visits 
+WHERE visit_id NOT IN (SELECT visit_id FROM Transactions)
+GROUP BY customer_id;
+
+/*
+QUESTION LINK
+https://leetcode.com/problems/rising-temperature/description/?envType=study-plan-v2&envId=top-sql-50
+
+QUESTION 197
+Write a solution to find all dates' id with higher temperatures compared to its previous dates (yesterday).
+*/
+SELECT 
+W1.id
+FROM Weather W1, Weather W2
+WHERE DATEDIFF(W1.recordDate, W2.recordDate) = 1
+AND W1.temperature > W2.temperature;
+
+/*
+QUESTION LINK
+https://leetcode.com/problems/average-time-of-process-per-machine/description/?envType=study-plan-v2&envId=top-sql-50
+
+QUESTION 1661
+There is a factory website that has several machines each running the same number of processes. 
+Write a solution to find the average time each machine takes to complete a process.
+The time to complete a process is the 'end' timestamp minus the 'start' timestamp. 
+The average time is calculated by the total time to complete every process on the machine divided by the number of processes that were run.
+The resulting table should have the machine_id along with the average time as processing_time, which should be rounded to 3 decimal places.
+*/
+SELECT 
+a1.machine_id,
+ROUND(AVG(a2.timestamp - a1.timestamp),3) as processing_time
+FROM Activity a1
+JOIN Activity a2
+ON a1.machine_id = a2.machine_id 
+AND a1.process_id = a2.process_id
+AND a1.activity_type = 'start' 
+AND a2.activity_type = 'end'
+GROUP BY a1.machine_id;
+
+/*
+QUESTION LINK
+https://leetcode.com/problems/employee-bonus/?envType=study-plan-v2&envId=top-sql-50
+
+QUESTION 577
+Write a solution to report the name and bonus amount of each employee with a bonus less than 1000
+*/
+SELECT 
+name,
+bonus
+FROM Employee e
+LEFT JOIN Bonus b
+ON e.empID = b.empID
+WHERE bonus < 1000 OR bonus IS NULL;
+
+/*
+QUESTION LINK
+https://leetcode.com/problems/students-and-examinations/?envType=study-plan-v2&envId=top-sql-50
+
+QUESTION 1280
+Write a solution to find the number of times each student attended each exam.
+Return the result table ordered by student_id and subject_name.
+*/
